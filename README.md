@@ -20,3 +20,6 @@
 [RNN Implementation](./docs/deeplearning4j/rnn/rnn.md)
 
 [CNN Implementation](./docs/deeplearning4j/cnn/cnn.md)
+
+## Multi-processor Programming
+[A Solution for No Copy IPC Based on SHM](./docs/amp/SHMIPC.pdf)
