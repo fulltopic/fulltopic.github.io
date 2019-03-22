@@ -259,7 +259,7 @@ Prepare input and labels for NN
 ```
 
 Neural Network:
-DQNFactoryStd*.java
+*DQNFactoryStd**.java
 
 
 ``` Java

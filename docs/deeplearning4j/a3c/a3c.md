@@ -14,7 +14,7 @@ The figures in this link explain what A3C is doing.
 In this example, value net and policy net are two independent NN, and they are treated independently
 ### Global Thread
 
-AsyncGlobal polls the queue and updates the network timely. Then update target network in some condition in double NN case
+*AsyncGlobal* polls the queue and updates the network timely. Then update target network in some condition in double NN case
 
 ```
     public void run() {
@@ -39,7 +39,6 @@ AsyncGlobal polls the queue and updates the network timely. Then update target n
         }
 
     }
-
 ```
 
 Workers send gradients for value net and policy net as an array and update them accordingly
@@ -72,16 +71,16 @@ ActorCriticSeparate.applyGradient(Gradient[] gradient, int batchSize) {
 }
 ```
 
-The updater for both of them are initiated in ActorCriticFactorySeparateStdDense.buildActorCritic() as default updater: Adam
+The updater for both of them are initiated in *ActorCriticFactorySeparateStdDense*.buildActorCritic() as default updater: Adam
 
 ### Worker Thread
 The worker is running in similar way as DQN does. There are three minor differences:
 * Networks are not updated in worker. Workers make use of network while not train them
 * We are training V instead of Q, so the labels for value network is simple reward, not something about next state.
 
-    About above differences, they could be proved in AsyncThreadDiscrete.trainSubEpoch() and A3CThreadDiscrete.calcGradient()
+About above differences, they could be proved in **.trainSubEpoch()* and *A3CThreadDiscrete.calcGradient()*
 
-The last one is a special loss function for policy network which implemented as ActorCriticLoss
+The last one is a special loss function for policy network which implemented as *ActorCriticLoss*
 #### ActorCriticLoss
 ```
     public INDArray computeGradient(INDArray labels, INDArray preOutput, IActivation activationFn, INDArray mask) {

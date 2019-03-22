@@ -8,9 +8,10 @@ The state is in the same format as described in [Supervised Learning](../mjsuper
 The reward is based on the ten won/lost in the game and distributed by decay through all steps
 
 ## Architecture
+
 |Layer  | Configuration                                    |
 |-------|--------------------------------------------------|
-|Input  |1 * 74, normalized into \[0, 1\]                    |
+|Input  |1 * 74, normalized into \[0, 1\]                  |
 |Conv0  |kernel = 1 * 4, number = 8, Relu                  |
 |Conv1  |kernel = 1 * 4, number = 8, Relu                  |
 |Dense  |128 nodes, Relu                                   |
@@ -22,6 +23,7 @@ The reward is based on the ten won/lost in the game and distributed by decay thr
 * Dense to connect my own tiles and tiles on the table
 * In mahjong game, Revolution layer seemed natural
 * Initialized by parameters trained in supervised learning
+
 ## Reward Function
 This game is in fact a partially observed RL problem,
 and there are still a lots to be tried on network architecture and learning process.
@@ -40,6 +42,7 @@ The policy softmax output:
 |3  |0.00|0.00|0.00|0.00|0.00|0.00|0.00|0.00|0.00|
 |4  |0.00|0.00|0.92|0.00|0.00|0.00|0.00|0.00|0.00|
 
+
 The number of tiles could be dropped:
 
 |Seq|No.1|No.2|No.3|No.4|No.5|No.6|No.7|No.8|No.9|
@@ -48,6 +51,7 @@ The number of tiles could be dropped:
 |2  |0   |0   |0   |1   |0   |0   |2   |1   |2   |
 |3  |1   |0   |0   |0   |0   |0   |0   |0   |0   |
 |4  |0   |0   |1   |0   |0   |0   |0   |0   |0   |
+
 ### Public Lobby
 #### Default reward function
 The default reward function is the Ten reward reported by Tenhou server,
@@ -90,8 +94,7 @@ While when the occurrence of invalid action decreased into certain level, this v
 
 The penalty value was set less than average reward to prevent the NN escaping into this area.
 
-Then the NN produces more sensible output:
-
+Then the NN produces more sensible output.
 
 The policy softmax output:
 
@@ -144,7 +147,7 @@ The number of tiles could be dropped:
 |28 |0   |0   |0   |1   |0   |0   |0   |1   |0   |
 
 #### 4 Times Positive Reward
-Positive reward was multiplied by 4 and zero reward was penaltied by -0.1 to encourage NN to win
+Positive reward was multiplied by 4 and zero reward was penaltied by -0.1 to encourage NN to win.
 
 The result was not worse than baseline:
 

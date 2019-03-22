@@ -1,9 +1,9 @@
 # Supervised Learning for RL NN
-For further RL of Tenhou client, the model was trained by game played by Tenhou experts.
+For further RL of Tenhou client, this model was trained by game played by Tenhou experts.
 ## Data
 ### Source
 The data was downloaded from [天鳳位](http://tenhou.net/ranking.html).
-The files in broken xml format have been transformed into xml files and located in [xml files](../../../../../../datasets/mjsupervised/xmlfiles/)
+The files in broken xml format have been transformed into xml files and located in [xml files](https://github.com/fulltopic/Dp4jPractice/tree/master/datasets/mjsupervised/xmlfiles)
 ### Input State
 The input is a 1D int vector with length as 74:
 * 0 ~ 33: My tiles owned currently
@@ -11,6 +11,7 @@ The input is a 1D int vector with length as 74:
 * 68 ~ 71: If other player reached
 * 72: If I am reached
 * 73: If I am the oya
+
 ### Output Action
 1D int vector with length as 42:
 * 0 ~ 33: tile to be discarded
@@ -31,6 +32,7 @@ The architecture of the NN is basically like:
 | Dense | RELU       |
 | LSTM  | TANH       |
 |Output | Softmax    |
+
 And several options tried.
 ## Training
 The following figure shows the summary:

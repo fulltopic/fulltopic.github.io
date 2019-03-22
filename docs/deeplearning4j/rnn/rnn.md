@@ -5,7 +5,7 @@ The architecture of the rnn cell is like the following figure shows:
 
 ![arch](./images/arch.jpg)
 ## Calculation
-As annotation declared in LSTMHelpers.java, this class is a implementation of this document: [vector impl](http://arxiv.org/pdf/1503.04069.pdf)
+As annotation declared in *LSTMHelpers.java*, this class is a implementation of this document: [vector impl](http://arxiv.org/pdf/1503.04069.pdf)
 
 The calculation is straightforward except one point. There is anothe style of calculation as demonstraed in this document: [recusion impl](https://github.com/go2carter/nn-learn/blob/master/grad-deriv-tex/rnn-grad-deriv.pdf)
 
@@ -225,7 +225,7 @@ LSTMHelpers::activateHelper()
 }
 ```
 
-toReturn in in activateHelper passed into backpropGradientHelper as fwdPass
+toReturn in in activateHelper passed into *backpropGradientHelper* as fwdPass
 
 ``` Java
 LSTMHelper::backpropGradientHelper()
