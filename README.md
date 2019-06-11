@@ -3,6 +3,8 @@
 
 [Convolution Operation](./docs/caffe2/conv_op/conv_op.md)
 
+[Recurrent Operation](./docs/caffe2/rnn_op/lstm_op.md)
+
 ## Deeplearning4j
 [Majhong A3C](docs/deeplearning4j/mjdrla3c/A3CReport.md)
 
