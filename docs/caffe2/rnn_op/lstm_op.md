@@ -42,6 +42,131 @@ This part defines output of recurrent network.
 This part initializes *Rz* (refer to above figure). 
 #### AddRecurrentNetworkOp
 Define simple network for step operation in recurrent network
+##### Workspaces
+The RNN network is built as an operator and step network is built as an argument,
+for workspace coherence, the workspace is set by an input argument *scope + "/step_workspaces"*:
+``` c++
+		auto op = trainModel.AddOp("RecurrentNetwork",
+					{scope + "/i2h", hidden_init, cell_init, scope + "/gates_t_w",
+						scope + "/gates_t_b", seq_lengths},
+					{scope + "/hidden_t_all", hidden_output, scope + "/cell_t_all",
+						cell_state, scope + "/step_workspaces"}
+		);
+
+//recurrent_network_op.h
+template <class Context>
+class RecurrentNetworkGradientOp final : public Operator<Context> {
+ public:
+  USE_OPERATOR_CONTEXT_FUNCTIONS;
+  RecurrentNetworkGradientOp(const OperatorDef& operator_def, Workspace* ws)
+      : Operator<Context>(operator_def, ws),
+        sharedWs_(ws),
+```
+The *RecurrentNetworkOp* and *GradientOp* assign a collection of workspaces,
+one for each time step.
+``` c++
+//DoRunWithType
+    const detail::ScratchWorkspaces& scratch =
+        this->template Input<detail::ScratchWorkspaces>(InputSize() - 1);
+    const std::vector<std::shared_ptr<Workspace>>& stepWorkspaces =
+        scratch.stepWorkspaces;
+    CAFFE_ENFORCE_GE(stepWorkspaces.size(), seqLen);
+    Workspace& sharedBlobsWs = *scratch.sharedBlobsWs.get();
+```
+
+Workspaces are organized as inherent tree, with input workspace argument as *sharedBlobsWs* shared by all time step workspaces.
+``` c++
+//DoRunWithType()
+    for (auto t = 0; t < seqLen; ++t) {
+      auto& currentStepWorkspace =
+          (has_backward_pass ? stepWorkspaces[t] :
+              stepWorkspaces[t % num_workspaces_on_fwd_only]);
+      if (!currentStepWorkspace) {
+        currentStepWorkspace = std::make_shared<Workspace>(sharedBlobsWs.get());
+      }
+```
+The *StepNetwork* is created in the corresponding workspace:
+``` c++
+    for (auto t = 0; t < seqLen; ++t) {
+//...
+      if (rnnExecutor_) {
+        if (!has_backward_pass) {
+          // Need to limit timestep parallelism because we cycle over workspaces
+          rnnExecutor_->SetMaxParallelTimesteps(num_workspaces_on_fwd_only);
+        }
+        rnnExecutor_->EnsureTimestepInitialized(
+            t, currentStepWorkspace.get(), this->observers_list_);
+      } else {
+        detail::UpdateTimestepBlob(currentStepWorkspace.get(), timestep_, t);
+        auto* stepNet = currentStepWorkspace->GetNet(stepNetDef_.name());
+        if (stepNet == nullptr) {
+          stepNet = currentStepWorkspace->CreateNet(stepNetDef_);
+          }
+        }
+```
+
+Why should assign a workspace for each step?
+* For RNN, each time step may receive different input and generate temporary output with the same blob names.
+    Different workspaces with same shared workspace encapsulate all temporary blobs in one workspace.
+* For some complex networks, the operators in step could be executed in parallel, esp. in GPU cases.
+* It is obvious that the RNN operator has been designed in this way
+    as the *LinkOperator* has been inserted into *StepNetwork* in *RecurrentNetworkOp*,
+    and the *LinkOperators* would be executed in each step:
+``` c++
+//RecurrentNetworkOp
+    links_ = constructLinks();
+    aliases_ = constructAliases();
+
+    stepNetDef_.add_external_input(timestep_);
+    detail::AddApplyLinkOps(
+        links_, timestep_, operator_def.device_option(), &stepNetDef_);
+```
+In this simple case, the blobs that encapsulated in local workspace are link internal blobs, including:
+``` c++
+Local blob LSTM/cell_t
+Local blob LSTM/cell_t_prev
+Local blob LSTM/gates_t
+Local blob LSTM/hidden_t
+Local blob LSTM/hidden_t_prev
+Local blob input_t
+Local blob timestep
+```
+In backward steps, the workspaces created in forward steps are transferred as inputs:
+``` c++
+struct GetRecurrentNetworkGradient : public GradientMakerBase {
+  using GradientMakerBase::GradientMakerBase;
+  std::vector<OperatorDef> GetGradientDefs() override {
+    //...
+    std::vector<std::string> gradientInputs;
+
+    //...
+
+    // All inputs and outputs are passed back
+    for (int i = 0; i < def_.input_size(); ++i) {
+      gradientInputs.push_back(I(i));
+    }
+
+    //...
+    return SingleGradientDef(
+        "RecurrentNetworkGradient", "", gradientInputs, gradientOutputs);
+  }
+```
+And extracted later:
+``` c++
+  template<typename T>
+  bool DoRunWithType() {
+	  //std::cout << "RecurrentNetworkGradientOp" << std::endl;
+
+    const auto seqLen = Input(gradInputs_.size()).dim32(0);
+    VLOG(1) << "seqLen: " << seqLen;
+
+    const detail::ScratchWorkspaces& scratch =
+        this->template Input<detail::ScratchWorkspaces>(InputSize() - 1);
+    const std::vector<std::shared_ptr<Workspace>>& stepWorkspaces =
+        scratch.stepWorkspaces;
+    //...
+  }
+```
 ##### Forward Pass Step Network
 Create forward network and set input/output:
 
@@ -212,10 +337,10 @@ It increase by 1 in forward pass and decrease by 1 in backward pass.
 ```c++
 		  net_add_arg(*op, "timestep", "timestep");
 ```
-*  recompute_blobs_on_backward
-Not defined
+*  recompute_blobs_on_backward: Not defined
+
 ```c++
-		  net_add_arg(*op, "recompute_blobs_on_backward");
+    net_add_arg(*op, "recompute_blobs_on_backward");
 		  
   void initializeBlobsToRecomputeOnBackward(Workspace* sharedBlobsWs) {
     std::vector<std::string> v;
@@ -227,6 +352,7 @@ Not defined
     }
   }		  
 ```
+
 * param, param_grads, outputs_with_grads, 
 *param* argument defines recurrent network parameters to be learned. 
 ```c++
