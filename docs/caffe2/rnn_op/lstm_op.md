@@ -110,8 +110,9 @@ Why should assign a workspace for each step?
     Different workspaces with same shared workspace encapsulate all temporary blobs in one workspace.
 * For some complex networks, the operators in step could be executed in parallel, esp. in GPU cases.
 * It is obvious that the RNN operator has been designed in this way
-    as the *LinkOperator* has been inserted into *StepNetwork* in *RecurrentNetworkOp*,
-    and the *LinkOperators* would be executed in each step:
+    1. The *LinkOperator* has been inserted into *StepNetwork* in *RecurrentNetworkOp*,
+    and the *LinkOperators* would be executed in each step.
+    2. The temporary output of internal operators. In this simple case, the temp blob is *LSTM/gates_t*
 ``` c++
 //RecurrentNetworkOp
     links_ = constructLinks();
