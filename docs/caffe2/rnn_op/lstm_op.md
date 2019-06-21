@@ -547,23 +547,22 @@ Similar in *RecurrentNetworkGradientOp::DoRunWithType*
 1. Calculate *(W * X)* for all time steps 
 2. Copy initiated value for *hidden_t_prev_states* time step 0
 3. Copy initiated value for *cell_t_prev_states* time step 0
-4. ?
-5. Recurrent network step at time t
-    * 5.0: update *timestep* value as t
-    * 5.1: *LSTM/hidden_t_prev* refers to *LSTM/LSTM/hidden_t_prev_states* values at t
-    * 5.2: *LSTM/hidden_t* refers to *LSTM/LSTM/hidden_t_prev_states* values at (t + 1) to restore LSTMUnitOp result
-    * 5.3: *LSTM/cell_t_prev* refers to *LSTM/LSTM/cell_t_prev_states* values at t
-    * 5.4: *LSTM/cell_t* refers to *LSTM/LSTM/cell_t_prev_states* values at (t + 1) to restore LSTMUnitOp result
-    * 5.5: *input_t* refers to *LSTM/i2h* values at t
-    * 5.6: *(R * c(t - 1))* at time step t
-    * 5.7: *(R * c(t - 1) + W * x(t))* at time step t
-    * 5.8: *(R * c(t - 1) + W * x(t))*, c(t - 1), y(t - 1) as inputs for all the gates and outputs
-    * 5.9: Get output of c(t) and y(t)
-6. Map *LSTM/LSTM/hidden_t_prev_states* as *LSTM/hidden_t_all*. That y(t) for {t | 0 <= t < sequenceLen}
-7. Map *LSTM/LSTM/hidden_t_prev_states* as *LSTM/hidden_t_last* in reverse sequence for backward pass
-8. Map *LSTM/LSTM/cell_t_prev_states* as *LSTM/cell_t_all*, do not know further usage
-9. Map *LSTM/LSTM/cell_t_prev_states* as *LSTM/cell_t_last* for backward pass
-10. Calculate o(t) from y(t) for {t | 0 <= t < sequenceLen}, function is *FC + Softmax*
+4. Recurrent network step at time t
+    * 4.0: update *timestep* value as t
+    * 4.1: *LSTM/hidden_t_prev* refers to *LSTM/LSTM/hidden_t_prev_states* values at t
+    * 4.2: *LSTM/hidden_t* refers to *LSTM/LSTM/hidden_t_prev_states* values at (t + 1) to restore LSTMUnitOp result
+    * 4.3: *LSTM/cell_t_prev* refers to *LSTM/LSTM/cell_t_prev_states* values at t
+    * 4.4: *LSTM/cell_t* refers to *LSTM/LSTM/cell_t_prev_states* values at (t + 1) to restore LSTMUnitOp result
+    * 4.5: *input_t* refers to *LSTM/i2h* values at t
+    * 4.6: *(R * c(t - 1))* at time step t
+    * 4.7: *(R * c(t - 1) + W * x(t))* at time step t
+    * 4.8: *(R * c(t - 1) + W * x(t))*, c(t - 1), y(t - 1) as inputs for all the gates and outputs
+    * 4.9: Get output of c(t) and y(t)
+5. Map *LSTM/LSTM/hidden_t_prev_states* as *LSTM/hidden_t_all*. That y(t) for {t | 0 <= t < sequenceLen}
+6. Map *LSTM/LSTM/hidden_t_prev_states* as *LSTM/hidden_t_last* in reverse sequence for backward pass
+7. Map *LSTM/LSTM/cell_t_prev_states* as *LSTM/cell_t_all*, do not know further usage
+8. Map *LSTM/LSTM/cell_t_prev_states* as *LSTM/cell_t_last* for backward pass
+9. Calculate o(t) from y(t) for {t | 0 <= t < sequenceLen}, function is *FC + Softmax*
 ### Backward Pass
 Backward Propagation:
 
