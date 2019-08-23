@@ -4,11 +4,15 @@
 * Closed source library
 * Primitives, not framework
 * Works on a single device, requires other frameworks for multi-GPU cases
+
 ## General Description
+
 ### Tensor Descriptor
 * Tensor descriptor is merely a descriptor of memory layout. It does not hold or point to memory.
 * By coordinating memory solely at the descriptor, Caffe2 retains control over memory and communication for efficiency
+
 #### Packed Descriptor
+
 ##### Fully-packed
 According to the definition:
 ``` c
@@ -55,11 +59,13 @@ In an overlapping tensor, an data element could be mapped to more than one index
 For example, data\[0]\[1]\[2]\[3] and data\[0]\[2]\[1]\[0] could point to the same data element.
 
 I don't know a factual case of this type of layout, suppose a circular layout matches the definition.
+
 ### Thread-safe
 The library is thread safe and its functions can be called from multiple host threads, as long as threads to do not share the same cuDNN handle simultaneously.
 
 The handle is a pointer to cuDNN library context.
 The context is associated with only one GPU device, however multiple contexts can be created on the save GPU device
+
 ### Reproducibility
 Atomic operation on floating-point is not reproducible.
 
@@ -70,6 +76,7 @@ is due to the combination of two phenomena: rounding-error and the order in whic
 [Reproducible floating-point atomic addition in data-parallel environment](https://annals-csis.org/proceedings/2015/pliks/86.pdf)
 
 ### RNN Functions
+
 #### Persistent Algorithm
 The standard algorithm loads W(parameters) from off-chip memory for each time step calculation.
 The bandwidth between off/on-chip memory becomes a bottleneck of performance.
@@ -91,8 +98,11 @@ and to always keep the thread(s) active in GPU while still preemptive.
 
 ## Usage
 [The tutorial guide](http://www.goldsborough.me/cuda/ml/cudnn/c++/2017/10/01/14-37-23-convolutions_with_cudnn/)
+
 ### Convolution Algorithm
+
 #### FFT
+
 ##### Convolution and Fourier Transform
 Suppose f(x) is input, h(x) is filter. Σ(i) means summary on index i.
 
@@ -123,12 +133,18 @@ f(x)*g(x) = IFT(FT(fx)) dot FT(g(x)))
 In 2D input case, set number of elements of input as N^2, number of elements of kernel as K^2
 * The standard convolution requires multiplication: O(N^2 * K^2).
 * Although dot product is a promising alternative, the multiplication of FT is still of O(N^3)) for complexity of DFT:
+
     1) For each element, execute DFT in row (O(N)), execute DFT in column (O(N)).
+
     2) For all elements (O(N ^ 2)), get complexity as O(N ^ 3).
+
     3) Dot: O(N ^ 2)
+
     4) IDFT: O(N ^ 3)
 * FFT
+
     1) For each element, execute FFT in row (O(log(N)), in column (O(log(N))
+
     2) For all elements (O(N ^ 2)), get complexity as O(N ^ 2 * log(N))
 
 ##### FFT Algorithm
@@ -178,8 +194,7 @@ For a convolution of input = R<sup>4</sup>, filter = R<sup>3</sup>, output = R<s
 the standard algorithm requires 6 multiplications.
 
 F(2,3) = | d<sub>0</sub> d<sub>1</sub> d<sub>2</sub> |
-         | d<sub>1</sub> d<sub>2</sub> d<sub>3</sub> | *
-         | g<sub>0</sub> g<sub>1</sub> g<sub>2</sub> |<sup>T</sup>
+         | d<sub>1</sub> d<sub>2</sub> d<sub>3</sub> | * | g<sub>0</sub> g<sub>1</sub> g<sub>2</sub> |<sup>T</sup>
 
 = | m<sub>1</sub> + m<sub>2</sub> + m<sub>3</sub> |
   | m<sub>2</sub> - m<sub>3</sub> + m<sub>4</sub> |
