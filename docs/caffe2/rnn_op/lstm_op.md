@@ -435,7 +435,7 @@ output: "LSTM/gates_t_b_grad"
 output: "hidden_init_grad"
 output: "cell_init_grad"
 ```
-In *constructParam*, the param also have been renamed as:
+In *constructParam*, the param also has been renamed as:
 ```c++
       p.cellGradient = grad_blob + "_tmpstep";
 ```
