@@ -35,6 +35,9 @@ Kernel is a software concept.
 _*_A block would be executed after occupying block completed? That is something related to STREAM_*_
 
 ### Dynamic Parameters
+In general, When discussing GPU performance, in most cases, we are talking about throughput.
+The throughput is often measured by Occupancy, and occupancy is measured by number of running Warps.
+
 For certain GPU, the fixed parameters are:
 
 * Number of SM
@@ -66,3 +69,115 @@ Number of Thread per Block (When number of Block is not decided yet):
 * It decides Number of Warp per SM: (Block per SM) * (Number of Thread per Block) / 32
     1) if (Number of Block per SM) <= (Max number of Block per SM), (Number of Warp per SM) = (Number of Block per SM) * (Number of Thread per Block) / 32
     2) if (Number of Block per SM) > (Max Number of Block per SM), (Number of Warp per SM) = (Max number of Block per SM) * (Number of Thread per Block) / 32
+
+## Memory
+### Overview
+[CUDA Memory Model](https://www.3dgep.com/cuda-memory-model/)
+### Examples
+#### Cardinality Sort
+##### CPU Sort 1
+The basic radix sort codes for CPU (Section 6.4.2)
+``` c++
+__host__ void cpu_sort(u32 *const data, const u32 num_elements) {
+  static u32 cpu_tmp_O[NUM_ELEM];
+  static u32 cpu_tmp_1[NUM_ELEM];
+
+  for (u32 bit = 0; bit < 32; bit ++) {
+    u32 base_cnt_0 = 0;
+    u32 base_cnt_1 = 0;
+
+    for (u32 i = 0; i < num_elements; i ++) {
+      const u32 d = data[i];
+      const u32 bit_mask = (1 << bit);
+
+      if ( (d & bit_mask) > 0) {
+        cpu_tmp_0[base_cnt_1] = d;
+        base_cnt_1 ++;
+      } else {
+        cpu_tmp_0[base_cnt_0] = d;
+        base_cnt_0 ++;
+      }
+    }
+
+    for (u32 i = 0; i < base_cnt_0; i ++) {
+      data[i] = cpu_tmp_0[i];
+    }
+
+    for (u32 i = 0; i < base_cnt_1; i ++) {
+    data[base_cnt_0 + i] = cpu_tmp_1[i];
+  }
+}
+```
+
+The process is like:
+
+![cpu_radix_sort](./images/cpu_radix_sort_1.jpg)
+
+##### GPU Sort 1
+Section 6.4.2
+###### Sort with 2 Tmp Block
+``` c++
+__device__ void radix_sort(u32 *const sort_tmp,
+                            const u32 num_lists,
+                            const u32 num_elements,
+                            const u32 tid,
+                            u32 *const sort_tmp_0,
+                            u32 *const sort_tmp_1) {
+  for (u32 bit = 0; bit < 32; bit ++) {
+    u32 base_cnt_0 = 0;
+    u32 base_cnt_1 = 0;
+
+    for (u32 i = 0; i < num_elements; i += num_lists) {
+      const u32 elem = sort_tmp[i + tid];
+      const u32 bit_mask = (1 << bit);
+
+      if ((elem & bit_mask) > 0) {
+        sort _tmp_1[base_cnt_1 + tid] = elem;
+        base_cnt_1 += num_lists;
+      } else {
+        sort_tmp_0[base_cnt_0 + tid] = elem;
+        base_cnt_0 += num_lists;
+      }
+    }
+
+    for (u32 i = 0; i < base_cnt_0; i+= num_lists) {
+      sort_tmp[i + tid] = sort_tmp_0[i + tid];
+    }
+
+    for (u32 i = 0; i < base_cnt_1; i += num_lists) {
+      sort_tmp[base_cnt_0 + i + tid] = sort_tmp_1[i + tid];
+    }
+  }
+
+  __synchthreads();
+}
+```
+Each thread sort a column of raw data that represented in 2D matrix:
+
+![gpu_radix_sort_1](./images/gpu_radix_sort_1.jpg)
+
+###### Sort with 1 Tmp Block
+Just replace *sort_tmp_0* with *sort_tmp* as there is no overlapping case.
+
+![gpu_radix_sort_2](./images/gpu_radix_sort_2.jpg)
+###### Merge with Single Thread
+![merge single thread](./images/merge_array_single_thread.jpg)
+
+*Page 127*
+
+Imagine *src_array* as 2D matrix, num_lists = column_number; list_indexes\[list] = row_index; list = column_index.
+
+One column had been sorted by one GPU thread.
+
+In merge phase as shown in above figure, when i = 8:
+
+* list = 0, list_indexes\[list] = 3, src_index = (3, 0), data = 12
+* list = 1, list_indexes\[list] = 1, src_index = (1, 1), data = 9
+* list = 2, list_indexes\[list] = 2, src_index = (2, 2), data = 9
+* list = 3, list_indexes\[list] = 2, src_index = (2, 3), data = 8
+
+*min_val = 8*, *min_idx* = 3, *dest_array\[8]* = 8, *list_indexes\[3]* = 3
+###### Merge in Parallel
+
+#### Merge Sort
+### Tips
