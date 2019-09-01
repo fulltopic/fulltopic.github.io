@@ -5,7 +5,7 @@
 
 [Recurrent Operation](./docs/caffe2/rnn_op/lstm_op.md)
 
-[cuDNN Notes](./docs/caffe2/cudnn/cudnn_notes.md)
+[cuDNN Notes](./docs/caffe2/cuda/cudnn_notes.md)
 
 ## Deeplearning4j
 [Majhong A3C](docs/deeplearning4j/mjdrla3c/A3CReport.md)
