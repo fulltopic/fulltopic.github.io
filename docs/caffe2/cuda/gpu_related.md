@@ -180,4 +180,21 @@ In merge phase as shown in above figure, when i = 8:
 ###### Merge in Parallel
 
 #### Merge Sort
+##### select_samples_gpu_kernel
+*sample_data* is an input argument.
+
+__*Is it in SHM or Global Memory?*__
+
+##### sort_samples_xpu
+Both CPU and GPU provides library for this simple sort.
+
+While cooperation of threads and challenge to cache covered benefits of parallel in GPU.
+This task is more straightforward to be executed in CPU, and with better performance.
+
+##### Prefix Sum Calculation
+![prefix_sum_gpu](./images/gpu_prefix_1.jpg)
+
+The last *bin_count* of current block thread would be added to first *prefix_idx* of the next block thread,
+as this number would not be counted in sum/prefix of current block thread.
+
 ### Tips
