@@ -198,3 +198,33 @@ The last *bin_count* of current block thread would be added to first *prefix_idx
 as this number would not be counted in sum/prefix of current block thread.
 
 ### Tips
+* Register is the best candidate to storage for its access performance, with 2 limitations:
+    1) It is NOT shared between threads
+    2) Too many registers per thread may harm capacity of Warp
+* SHM
+    1) If each thread of Warp accesses a separate bank address, the certain operation of the Warp could be executed in one cycle
+    2) If more than one threads access to the same bank address, they would be executed sequentially
+    3) If each thread of the Warp reads the same bank address, the read of all threads could be executed in one cycle
+* Quick sort is not the best for GPU as it
+    1) Recursion is not supported in CUDA prior to 2.x
+    2) Branches are divergence, not good for GPU
+* The function invocation costs registers for stack, so merge functions into one function is a reasonable way to reduce register cost.
+* Constant memory
+    1) Constant memory is part of global memory.
+    2) There is no special reserved constant memory block
+    3) It is read-only for GPU, writable for CPU
+    4) It is cached (where?)
+    5) It supports broadcasting a single value to all elements within a warp. It provides L1 cache speed
+    6) If a constant is really a literal value, it is better to define it as literal value using *#define*
+    7) Sometimes, compiler may transfer constant var into literal var
+    8) On Fermi, L1 cache and constant memory access speeds are in same level
+* Coalesced access
+    1) If we have a one-to-one __sequential__ and __aligned__ access to memory, the address accesses of each thread are combined together and a single memory transaction is issued.
+    2) Replace *cudaMalloc* with __cudaMallocPitch__
+    3) So, data often organized by columns instead of rows as that in CPU case
+    4) Array of structure would be split into separate arrays: abcdabcdabcdabcd ==> aaaabbbbccccdddd. The later is better for Warp of 4 threads to execute SISD
+* Index calculation is sometimes costly, some multiplications and additions and moves
+* Global Memory question & answer
+    1) Performance of almost sorted data is better as each bin has almost the same number of data to be sorted, that makes each thread have almost the same workload.
+    2) In radix sort of each bin, the layout of data elements to be sorted is like one row per thread, that failed coalesced access.
+* Constant memory, Global memory, L2 cache?
