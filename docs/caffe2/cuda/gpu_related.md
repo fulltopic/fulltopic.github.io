@@ -228,3 +228,41 @@ as this number would not be counted in sum/prefix of current block thread.
     1) Performance of almost sorted data is better as each bin has almost the same number of data to be sorted, that makes each thread have almost the same workload.
     2) In radix sort of each bin, the layout of data elements to be sorted is like one row per thread, that failed coalesced access.
 * Constant memory, Global memory, L2 cache?
+* Difference between L1 cache and SHM, as they have similar performance?
+## Using CUDA in Practice
+* Fermi designers believe the programmer is best placed to make use of the high-speed memory
+    that can be placed close to the processor, in this case, the SHM on each SM
+* OpenMP and MPI are not good fit for GPU, but OpenMP is relatively better
+* Selecting an algorithm that is appropriate to hardware and getting the data in the correct layout is often key to good performance on GPU.
+* Branching within a warp in this way causes the other threads to implicitly wait at the end of __*if*__ statement (page 216 PDF)
+* *__proc* returns 1s in input argument in bit format
+* The blocks, and the warps within those blocks, may execute in any order.
+    The *if (threadIdx.x == 0) && (blockIdx.x == 0)* does not synchronize implicitly
+* *Local* storage on Fermi is L1 cache and global memory on the earlier-generation GPUs.
+    On Fermi, pushing more data into the L1 cache reduces the available cache space for other purposes.
+* Multiplication costs many cycles, which may stall the instruction stream. So index of array is not good practice, replace it with *pointer++* is much better
+* Loop unrolling --> instruction level parallelism, but more registers required
+* __How number of registers per thread affects number of block per SM?__
+* __Where are data in registers when corresponding threads are stalled and other Warp of thread are scheduled?__
+* __Threads in one Block execute same instructions, Warp decides if they are executed or stalled. Is that right?__
+* Number of blocks VS number of threads per SM
+* Transfer performance: PCIe transfer performance, decided by PCIe hardware performance
+* Stream 0 is the default stream. This is a synchronized stream that helps significantly when debugging an application but is not the most efficient use of GPU.
+* Asynchronous stream decreases synchronization needed for an asynchronous operation.
+* The registers overflow to local memory which harms performance.
+    Declare it as *__shared__* to make them overflow the SHM.
+* Stack frame often overflows to local memory to harm the performance.
+    Declare function as *__forceinline__* force the function unroll in compiling.
+* When *Issue Stalls* are in small percentage, increase available Warp does not help occupancy.
+* Multiple streams are useful in that they allow some overlap of kernel execution with PCI-E
+  transfers
+* With a single PCI-E transfer engine enabled, we have just a single queue for all the memory transfers
+  in the hardware. Despite being in separate streams, memory transfer requests feed into a single queue on
+  Fermi and earlier hardware. Thus, the typical workflow pattern of transfer from host to device, invoke
+  kernel, and then transfer from device to host creates a stall in the workflow. The transfer out of the device
+  blocks the transfer into the device from the next stream. Thus, all streams actually run in series
+* You need N sets of host and device memory, where N is the number of streams you wish to run. When you have
+  multiple GPUs, this makes a lot of sense, as each GPU contributes significantly to the overall result.
+  However, with a single-consumer GPU the gain is less easy to quantify. It works well only where either
+  the input or output of the GPU workload is small in comparison to one another and the total transfer
+  time is less than the kernel execution time
