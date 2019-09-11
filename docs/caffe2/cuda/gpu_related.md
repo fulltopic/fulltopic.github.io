@@ -266,3 +266,15 @@ as this number would not be counted in sum/prefix of current block thread.
   However, with a single-consumer GPU the gain is less easy to quantify. It works well only where either
   the input or output of the GPU workload is small in comparison to one another and the total transfer
   time is less than the kernel execution time
+## Multi-CPU and Multi-GPU Solutions
+* The issue of cache coherency is what limits the maximum number of cores that can practically cooperate on a single node
+* As soon as a core from socket 1 tries to access a memory address from socket 2, it has to be serviced by socket 2,
+  as only socket 2 can physically address that memory. This is called nonuniform memory access
+  (NUMA)
+* CPU processes use separate memory space. GPU Blocks access a common address space on GPU global memory
+* Multiple GPUs can communicate to one another on the same host, using host memory, or via PCIe bus peer-to-peer communication model.
+### Streams
+* Streams are virtual work queues on GPU.
+* They are used for asynchronous operations, i.e., when you would like the GPU to operate separately from CPU
+* The default memory copies to and from the host or device implicitly cause a synchronization point.
+* Asynch-stream/push_to_queue/multi-stream per GPU
