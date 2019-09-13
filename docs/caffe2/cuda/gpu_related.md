@@ -278,3 +278,32 @@ as this number would not be counted in sum/prefix of current block thread.
 * They are used for asynchronous operations, i.e., when you would like the GPU to operate separately from CPU
 * The default memory copies to and from the host or device implicitly cause a synchronization point.
 * Asynch-stream/push_to_queue/multi-stream per GPU
+## Optimizing You Application
+### STRATEGY 1: PARALLEL/SERIAL GPU/CPU PROBLEM BREAKDOWN
+Could the problem be broken down? How many blocks could it be split? The strategy is often data based or output data based.
+#### Dependencies
+* Block of codes running in CPU often keep it sequence.
+    In GPU, it may be broken down into parallel parts by GPU automatically
+* Loop fusion
+    1) May reduce iteration number --> reduce branch
+    2) Merge independent calculation --> reduce iteration number --> but reduce possible parallel if threads resource is enough to execute them in parallel
+    3) Split data into blocks that could be hold by SHM or registers in calculation.
+#### Dataset
+The major question for GPU is not so much about cache, but about how much data can you hold on a single card.
+Transferring data to and from the host system is expensive in terms of compute time.
+You should overlap computation with data transfers.
+### STRATEGY 2: MEMORY CONSIDERATIONS
+### STRATEGY 3: TRANSFERS
+#### Pinned memory
+* The PCIe transfers in practice can only be performed using DMA-based transfer.
+    Without pinned memory, CPU allocates locked memory in real time and then release it; which is CPU costly.
+* Memory allocated on the GPU is by default allocated as page locked simply because GPU does not support swapping memory to disk.
+#### Zero-copy memory
+* If your application is arithmetically bound, zero-copy memory can be a very useful
+  technique. It saves you the explicit transfer time to and from the device. In effect, you are overlapping
+  computation with data transfers without having to do explicit stream management.
+* This can also be used very effectively on systems where the host and GPU share the same
+  memory space
+* In effect, what happens with the zero-copy memory is we break both the transfer and the kernel
+  operation into much smaller blocks, which execute them in a pipeline (Figure 9.17). The overall time is
+  reduced quite significantly
