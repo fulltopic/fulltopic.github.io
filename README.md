@@ -7,6 +7,8 @@
 
 [cuDNN Notes](./docs/caffe2/cuda/cudnn_notes.md)
 
+[A Developer's Guide to Parallel Computing the GPUs](./docs/caffe2/cuda/gpu_related.md)
+
 ## Deeplearning4j
 [Majhong A3C](docs/deeplearning4j/mjdrla3c/A3CReport.md)
 
