@@ -66,4 +66,80 @@ So, for each element of *M*
 And the same to *N*
 
 ### 5.3
+In figure 5.12, line 12:
+``` c
+for (int k = 0; k < TILE_WIDTH; k ++)
+{
+    Pvalue += Mds[ty][k] * Nds[k][tx];
+}
+```
+The calculation read *Mds* and *Nds* in range of *TILE_WIDTH*.
+These elements are loaded by other threads except one.
 
+Without *__synchthreads* in line 11, current thread may read *Mds* element that has not been loaded.
+Without *__synchthreads* in line 14, current thread may update *Mds* element that has not been read by other threads.
+
+For example
+``` c
+ty = 0, tx = 0, blockIdx.x = 0, blockIdx.y = 0
+
+Without __synchthreads in line 11, the Mds[0][1] may be still initial value, not the value to be loaded (M[0][1]).
+
+Without __synchthreads in line 14, when Pvalue+ loop completed, this value go on loading Mds[0][2],
+but thread(0,1) is still computing the tile((0,0), (0,1), (1,0), (1,1)).
+Then thread(0,1) will read M[0][2] instead of M[0][0].
+```
+### 5.4
+The SHM could be shared between threads in the same block,
+which means reuse and communication.
+
+Make the kernel in figure 5.12 as the example.
+### 5.5
+C
+
+Refer to analysis at the end of section 5.4 or solution 5.2
+### 5.6
+d
+
+Local variable inside kernel is a register variable.
+It has lifetime of thread.
+So A variable would be created for each thread.
+
+--> 1000 * 512 = 512,000
+### 5.7
+b
+
+It is bound to block
+### 5.8
+* L1 cache is cache for global memory. The scope of L1 cache is SM (or kernel lie in the SM), scope of SHM is block.
+* SHM is manipulated by kernel explicitly; L1 cache is controlled by hardware, unpredictable.
+### 5.9
+#### a
+N
+#### b
+N / T
+### 5.10
+#### a
+Consider GFLOPS capacity, max threads running in parallel is (200G / 36) > 5G;
+
+For memory bandwidth, max threads running in parallel is (100G / (7 * 4)) < 4G.
+
+The bottleneck lies in bandwidth, it is memory-bound case.
+#### b
+300G / 36 = 8.33G < 250G / (7 * 4) = 8.93
+
+It is compute-bound case.
+### 5.11
+Still don't know specification of capacityX.x
+
+* Check capacity of number of threads per block
+* Check if SHM occupied by one block within the capacity of SHM per SM
+
+If above conditions matched, the case is possible.
+
+The limitation would be:
+* Capacity of number of blocks per SM
+* Capacity of number of threads per SM
+* Capacity of SHM per SM
+
+They all limit number of blocks running in parallel. 
