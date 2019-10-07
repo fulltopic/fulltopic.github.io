@@ -142,4 +142,4 @@ The limitation would be:
 * Capacity of number of threads per SM
 * Capacity of SHM per SM
 
-They all limit number of blocks running in parallel. 
+They all limit number of blocks running in parallel.
