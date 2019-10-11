@@ -61,3 +61,12 @@ So the max is about 1 ulp
 In the sorted array, the adjacent elements have the minimum gap, creating chance for these small elements to be added into a larger element to reduce the gap to the next element.
 In figure 6.4, the elements added up in each thread are not adjacent, which enlarged the gap between two elements to be added, creating chance for the smaller one to be omitted.
 ### 7.5
+Not fully understand the question. Guess that:
+
+For IEEE single-precision number, there 23 bits for mantissa. 
+
+Running 9 iterations generated 18 accurate bits, including 1 bit for *1. mantissa bit*.
+
+The effective number of bits for *sin()* is 17 bits. 
+
+With *0.5<sub>D</sub>ulp* for CUDA/IEEE, the maximum ulp of *sin()*  would be 2<sup>-18</sup> 
