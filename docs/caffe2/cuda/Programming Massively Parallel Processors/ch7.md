@@ -1,6 +1,12 @@
 # Ch7
 ## Notes
 * NAN representation?
+* Interested readers should
+  study more advanced techniques such as compensated summation algorithm, also known as Kahan’s summation algorithm, for getting an even
+  more robust approach to accurate summation of floating-point values
+* In general, the pivoting step should choose the equation with the largest
+  absolute coefficient value among all the lead variables and swap its equation (row) with the current top equation, as well as swap the variable (col-
+  umn) with the current variable.
 ## Solution
 ### 7.1
 ![table](./images/no_zero_chart.jpg)
@@ -52,3 +58,6 @@ the tail to be rounded is
 
 So the max is about 1 ulp
 ### 7.4
+In the sorted array, the adjacent elements have the minimum gap, creating chance for these small elements to be added into a larger element to reduce the gap to the next element.
+In figure 6.4, the elements added up in each thread are not adjacent, which enlarged the gap between two elements to be added, creating chance for the smaller one to be omitted.
+### 7.5
