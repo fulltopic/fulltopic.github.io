@@ -1,5 +1,5 @@
 ## Caffe2
-[Template and Meta in shared_ptr](./docs/caffe2/shared_ptr/std::shared_ptr.md)
+[Template and Meta in shared_ptr](./docs/caffe2/shared_ptr/std__shared_ptr.md)
 
 [Convolution Operation](./docs/caffe2/conv_op/conv_op.md)
 
