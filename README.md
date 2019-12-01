@@ -58,3 +58,29 @@
 [Ch16](https://blog.csdn.net/fulltopic/article/details/38925621)
 
 [Ch17](https://blog.csdn.net/fulltopic/article/details/39482653)
+
+## CUDA
+### Programming Massively Parallel Processors (Solution)
+The solutions have not been verified in GPU. Just a draft.
+
+[ch3](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch3.md)
+
+[ch4](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch4.md)
+
+[ch5](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch5.md)
+
+[ch6](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch6.md)
+
+[ch7](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch7.md)
+
+[ch8](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch8.md)
+
+[ch9](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch9.md)
+
+[ch10](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch10.md)
+
+[ch11](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch11.md)
+
+[ch12](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch12.md)
+
+[ch13](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch13.md)
