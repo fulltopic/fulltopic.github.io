@@ -2,20 +2,22 @@
 ## Three Types of Processors
 *Pytorch* is able to wrap all three types of processor (operators) into a uniform format: *KernelFunction*.
 The types could be wrapped are function, functor and lambda.
-[under hood](https://web.mst.edu/~nmjxv3/articles/lambdas.html)
+
+[lambda under hood](https://web.mst.edu/~nmjxv3/articles/lambdas.html)
 ### Sequences
 According to following operator invocation sequence image, 
 the uniform format of processors is *KernelFunction*.
 
-TODO: boxedfunctor.operator()
 ![call1](./images/call1.jpg)
 
 The processor registration sequence is like:
-![reg lambda](./images/regLambda.jpg)
+
+![reg function](./images/regFunction.jpg)
 ### Classes in Pytorch
 The relationship of processor wrappers:
+
 ![functor classes](./images/functor%20classes.jpg)
-## The Interface to Register Difference Kernels by Meta
+## Register Difference Kernels by Meta
 ### Entries
 The entry of processor wrapping is implemented in *op_registration.h*.
 Most processors are registered statically in system initiation. 
@@ -41,8 +43,7 @@ And the registration entries for different processor types recognizes types by m
 // internal-only for registering stack based kernels
 Options&& kernel(TensorTypeId dispatch_key, KernelFunction::BoxedKernelFunction* kernel_func) && {
 ```
-* This is internal-only function, but don't know why it is defined as public
-* All three types of kernels are wrapped into BoxedKernelFunction to complete the kernel registration 
+* This is internal-only function, not for users of pytorch
 #### entry2
 ```c++
 template<class KernelFunctor, class... ConstructorParameters>
@@ -201,9 +202,9 @@ while the *callBoxed* or *callUnboxed* function requires a
 As it is natural for user (e.g. NN Model) to set these parameters, 
 while it is unreasonable for user to provide <funcType> template parameters, 
 which will make the extensibility and flexibility of the framework unfeasible.
-* If we make the facade as a simple *OperatorKernel.operator()(args)* 
+* If we make the facade as, for example, a simple *OperatorKernel.operator()(args)* 
 and make every child class of *OperatorKernel* to implements these *operator()* function,
-the number of the combination(NOT) of input types and the conflicts of return type for same input types 
+the number of the permutation of input types and the conflicts of return type for same input types 
 make the strategy almost impossible.
 * So we wrapped the *OperatorKernel* again and provided a static function 
 to make the operations in a uniform format without consideration of inheritance tree
@@ -325,7 +326,48 @@ Then the *KernelFunction* is created by *makeFromUnboxedFunctor*
 #### Conclusion
 In general, all unboxed types are wrapped into functor and then 
 an assistant class generated to provide static *call* function 
-to complete the registration and to preserve the type information of types. 
+to complete the registration and to preserve the type information of types.
+## Some Meta Programming Practices 
 ### The Stack
-## The Options Chain Pattern Implementation
-## *valid_input_xxx*
+```c++
+template<class Functor, bool AllowDeprecatedTypes, size_t... ivalue_arg_indices>
+  typename guts::infer_function_traits_t<Functor>::return_type call_functor_with_args_from_stack_(Functor* functor, Stack* stack, guts::index_sequence<ivalue_arg_indices...>) {
+    (void)(stack); // when sizeof...(ivalue_arg_indices) == 0, this argument would be unused and we have to silence the compiler warning.
+    constexpr size_t num_ivalue_args = sizeof...(ivalue_arg_indices);
+
+    using IValueArgTypes = typename guts::infer_function_traits_t<Functor>::parameter_types;
+    return (*functor)(ivalue_to_arg<
+    		guts::remove_cv_t<
+			guts::remove_reference_t<
+			guts::typelist::element_t<ivalue_arg_indices, IValueArgTypes>
+    		>>,
+    		AllowDeprecatedTypes>(
+    				std::move(torch::jit::peek(*stack, ivalue_arg_indices, num_ivalue_args))
+    		)
+			...);
+  }
+```
+This function shows how to flatten *Stack* into function input arguments.
+
+* (*...ivalue_arg_indices*) is a collection of indices, it is (0, ..., N) (N = #args) in default. *ivalue_arg_indices* is a certain index in the collection, the value = the n<sub>th</sub> value in the collection in n<sub>th</sub> loop step
+* *num_ivalue_args* = number of args
+* *...IvalueArgTypes* is a collection of arg types
+* When *functor* is executed, all arguments should have been ready
+* *ivalue_to_arg<>()... is variable length input format. All arguments would be popped out from stack in this style.
+* *guts::remove_cv_t<guts::remove_reference_t<>>* is to get the plain type of the paremeter
+* *guts::typelist::element_t<ivalue_arg_indices, IValueArgTypes>* gets the type of n<sub>th</sub> parameter
+* After above step, the sentence is like
+```c++
+(*functor)(ivalue_to_arg<Type, AllowDeprecatedTypes>(
+    std::move(torch::jit::peek(*stack, ivalue_arg_indices, num_ivalue_args))
+)
+``` 
+* *torch::jit::peek(*stack, ivalue_arg_indices, num_ivalue_args)* means:
+Suppose *stack* is a *vector*, step back from the end of *stack* in *num_ivalue_args* steps, and take this position as front of the stack,
+then get the *ivalue_arg_indices*<sub>th</sub> element of the stack.
+* After above step, the sentence is like:
+```c++
+(*functor)(ivalue_to_arg<Type, AllowDeprecatedTypes>(IValue);
+```
+* *ivalue_to_arg* converse *Ivalue* into *Type* and make it the *ivalue_arg_indices*<sub>th</sub> argument of the *functor*
+* The steps loop for the next input argument
