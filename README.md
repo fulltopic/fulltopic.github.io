@@ -84,3 +84,5 @@ The solutions have not been verified in GPU. Just a draft.
 [ch12](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch12.md)
 
 [ch13](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch13.md)
+## Pytorch
+[Kernel Registration](./docs/pytorch/kernelregistry.md)
