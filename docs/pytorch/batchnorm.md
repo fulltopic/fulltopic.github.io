@@ -20,7 +20,7 @@ An intuitive explanation is that the training of parameters of layer H<sub>n+1</
 But the sequence of back-propagation if from H<sub>n+1</sub> to H<sub>n</sub>. 
 So the ongoing update of different layers may conflict with each other or cancel update effect of each other.
 
-![covirate](./images/covariate_0.jpg) 
+![covirate](./images/covariate.jpg) 
 
 Above figure showed a simple case. 
 * In batch t training, H<sub>n</sub> decided to move the output distribution to the right;
