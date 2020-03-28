@@ -86,3 +86,7 @@ The solutions have not been verified in GPU. Just a draft.
 [ch13](./docs/caffe2/cuda/Programming%20Massively%20Parallel%20Processors/ch13.md)
 ## Pytorch
 [Kernel Registration](./docs/pytorch/kernelregistry.md)
+
+[Batchnorm](./docs/pytorch/batchnorm.md)
+
+[Pytorch AWS Installation](./docs/pytorch/installation.md)
