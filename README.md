@@ -90,3 +90,5 @@ The solutions have not been verified in GPU. Just a draft.
 [Batchnorm](./docs/pytorch/batchnorm.md)
 
 [Pytorch AWS Installation](./docs/pytorch/installation.md)
+
+[Tensor Internal (CPU)](./docs/pytorch/tensor.md)
