@@ -92,3 +92,7 @@ The solutions have not been verified in GPU. Just a draft.
 [Pytorch AWS Installation](./docs/pytorch/installation.md)
 
 [Tensor Internal (CPU)](./docs/pytorch/tensor.md)
+## Reinforcement Learning: An Introduction
+[Resources](./docs/RL/Sutton/resource.md)
+
+[Ch1](./docs/RL/Sutton/Chapter01.md)

@@ -1,0 +1,16 @@
+	find_package(Torch REQUIRED PATHS /home/zf/workspaces/workspace_cpp/pytorch_1_3/pytorch//build/lib.linux-x86_64-2.7/torch/share/cmake/Torch/ NO_DEFAULT_PATH)
+
+
+mesa-libGLU-devel
+mesa-libGL-devel
+mesa-libOSMesa-devel
+patchelf
+glfw-* (glfw-devel, glfw-doc)
+swig
+
+xvfb
+curl
+zlib
+zlib-devel
+
+ffmpeg
