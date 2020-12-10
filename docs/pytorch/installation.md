@@ -1,4 +1,5 @@
 # Install Pytorch in AWS from Source
+[Official Instruction](https://github.com/pytorch/pytorch#from-source)
 ## Update OS
 ```shell script
 sudo yum update
@@ -25,7 +26,8 @@ conda install numpy ninja pyyaml mkl mkl-include setuptools cmake cffi
 * Install official libs
 ```shell script
 sudo yum groupinstall "Development Tools"
-sudo yum install glogsudo yum install protobuf-devel leveldb-devel snappy-devel opencv-devel boost-devel hdf5-devel
+sudo yum install glog
+sudo yum install protobuf-devel leveldb-devel snappy-devel opencv-devel boost-devel hdf5-devel
 sudo yum install python3-devel
 ```
 * Create path for source libs
