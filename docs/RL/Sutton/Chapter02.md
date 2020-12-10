@@ -40,7 +40,7 @@ Q<sub>k+1</sub> = Q<sub>k</sub> + α<sub>k+1</sub> * (R<sub>k</sub> - Q<sub>k</s
 
 = α<sub>k+1</sub> * R<sub>k</sub> + (1 - α<sub>k+1</sub>) * (α<sub>k</sub> * R<sub>k-1</sub> + (1 - α<sub>k</sub>) * Q<sub>k-1</sub>)
 
-= α<sub>k+1</sub> * R<sub>k</sub> + α<sub>k</sub>  * (1 - α<sub>k+1</sub>) * R<sub>k-1</sub> + ... + α<sub>k+1</sub>  * (1 - α<sub>k+1</sub>) * (1 - α<sub>k</sub>) * (1- α<sub>k-1</sub>) ... (1 - α<sub>1</sub>)R<sub>1</sub>
+= α<sub>k+1</sub> * R<sub>k</sub> + α<sub>k</sub>  * (1 - α<sub>k+1</sub>) * R<sub>k-1</sub> + ... + (1 - α<sub>k+1</sub>) * (1 - α<sub>k</sub>) * (1- α<sub>k-1</sub>) ... (1 - α<sub>2</sub>) * α<sub>1</sub> * R<sub>1</sub>
 ## 2.4
 Refer to [2.4 code](./codes/ch2/q4.cpp)
 
