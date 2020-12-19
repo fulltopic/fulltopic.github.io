@@ -39,15 +39,14 @@ q<sub>π</sub>(s,a) = E<sub>π</sub>[R + γG' | s,a]
 
 = ∑<sub>s'</sub>p(s'|s,a) * [R + γ∑<sub>a'</sub>π(a'|s') * q<sub>π</sub>(s',a')]
 ## 4.4
-* Set threshold for steps updated per state, no update when threshold reached
+* Set threshold for steps updated per state/per evaluation, no update when threshold reached
 * Set threshold for state value, no update when threshold reached
 * Set γ < 1
 * Check policy to detect negative infinite loop
-argmax<sub>a</sub>
 ## 4.5
 [codes](./codes/ch4/orig4_5.cpp)
 ## 4.6
-```aidl
+```
 1.  Initiation
 Initialize Q(s,a) ∀{s,a | s∈S,a∈A}; initialize π(s) ∀s∈S
 2. Policy Evaluation
@@ -55,7 +54,7 @@ Initialize Q(s,a) ∀{s,a | s∈S,a∈A}; initialize π(s) ∀s∈S
     ∆ <- 0
     for each (s,a) ∈ SxA:
       q <- Q(s,a)
-      Q(s,a) <- ∑s'p(s'|s,a) * [R + γ∑a'π(a'|s') * qπ(s',a')]
+      Q(s,a) <- ∑(s')p(s'|s,a) * [R + γ∑(a')π(a'|s') * q[π](s',a')]
       ∆ <- max(∆, |Q(s,a) - q|)
   until ∆ < θ
 3. Policy Improvement
