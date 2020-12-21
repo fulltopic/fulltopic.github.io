@@ -89,6 +89,8 @@ G<sub>t</sub> - Q(S<sub>t</sub>, A<sub>t</sub>) = R<sub>t+1</sub> + γG<sub>t+1<
 = δ<sub>t</sub> + γδ<sub>t+1</sub> + γ<sup>2</sup>(G<sub>t+2</sub> - Q(S<sub>t+2</sub>, A<sub>t+2</sub>))
 
 = ∑<sub>k=(t:T-1)</sub>γ<sup>k-t</sup>δ<sub>k</sub>
+### 6.9 6.10
+[codes](./codes/ch6)
 ### 6.11
 Because that the Q(S<sub>t</sub>, A<sub>t</sub>) is always updated by max<sub>a</sub>(Q(S<sub>t+1</sub>, A<sub>t+1</sub>)),
 while sometimes the policy did not choose the argmax(Q) as the next action (e.g. e-greedy)
