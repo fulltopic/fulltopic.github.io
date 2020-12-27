@@ -19,6 +19,18 @@ The agent needs exploration to detect the relatively more prospective policies.
 Two alternatives:
 1. The long path requires more explorations, and exploration means extra cost
 2. The path is easy to be found and exploration is waste
+### 8.4
+[codes](./codes/ch8)
+
+Total step = 8000, change model at step = 4000; red = dyna, green = dyna+
+
+Move The Block
+
+![move the block](./images/8_4_move.png)
+
+Shortcut
+
+![sc_block](./images/8_4_shortcut.png)
 ### 8.5
 ### 8.5.1
 It requires another table for P(S<sup>'</sup> | S, A). 
