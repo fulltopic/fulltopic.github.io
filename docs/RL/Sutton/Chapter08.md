@@ -49,3 +49,9 @@ when b=1, the deterministic environment is more suitable for greedy policy with 
 The random policy takes too much time exploring non-optimal candidates.
 * The gap between on-policy and uniform increase when b increases
 * The gap between on-policy and uniform increase when number of states increases
+### 8.8
+[codes](./codes/ch8)
+
+Not explicit test result:
+
+![value](./images/8_8.png)
