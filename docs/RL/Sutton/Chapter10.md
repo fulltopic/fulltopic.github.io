@@ -1,6 +1,14 @@
 # Chapter10
-∑ τ α π δ γ ∏ Δ Λ μ ∈ ∀
+∑ τ α π δ γ ∏ Δ Λ μ ∈ ∀ β
 ## Notes
+To clarify:
+
+The root cause of the difficulties with the discounted control setting is that with
+function approximation we have lost the policy improvement theorem (Section 4.2). It is
+no longer true that if we change the policy to improve the discounted value of one state
+then we are guaranteed to have improved the overall policy in any useful sense. That
+guarantee was key to the theory of our reinforcement learning control methods. With
+function approximation we have lost it!
 ## Exercises
 ### 10.1
 ```
@@ -73,8 +81,6 @@ G(B)<sub>t</sub> = R<sub>t+1</sub> - r(π) + R<sub>t+2</sub> - r(π) + R<sub>t+2
 v<sub>π</sub>(s) = 0 (∀S∈{A,B,C})
 
 ### 10.7
-∑ τ α π δ γ ∏ Δ Λ μ ∈ ∀ β
-
 Don't know r(π). Guess that r(π) = 1/2
 
 v(S) = lim(γ)lim(h)γ<sub>t</sub>(E(R<sub>t+1</sub>) - r(π))
