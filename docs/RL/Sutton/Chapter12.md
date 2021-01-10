@@ -9,6 +9,8 @@
 
 [Maybe Coursera](https://www.cs.utexas.edu/~pstone/Courses/394Rfall16/resources/week6-sutton.pdf)
 
+[True TD Lambda](http://wittawat.com/posts/true_online_td_lambda.html)
+
 ## Exercises
 ### 12.1
 G<sub>t:t+n</sub> = R<sub>t+1</sub> + γR<sub>t+2</sub> + ... + γ<sup>n</sup>v(S<sub>t+n</sub>, w<sub>t+n-1</sub>)
