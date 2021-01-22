@@ -96,3 +96,23 @@ The solutions have not been verified in GPU. Just a draft.
 [Resources](./docs/RL/Sutton/resource.md)
 
 [Ch1](./docs/RL/Sutton/Chapter01.md)
+
+[Ch2](./docs/RL/Sutton/Chapter02.md)
+
+[Ch3](./docs/RL/Sutton/Chapter03.md)
+
+[Ch4](./docs/RL/Sutton/Chapter04.md)
+
+[Ch5](./docs/RL/Sutton/Chapter05.md)
+
+[Ch6](./docs/RL/Sutton/Chapter06.md)
+
+[Ch7](./docs/RL/Sutton/Chapter07.md)
+
+[Ch8](./docs/RL/Sutton/Chapter08.md)
+
+[Ch9](./docs/RL/Sutton/Chapter09.md)
+
+[Ch10](./docs/RL/Sutton/Chapter10.md)
+
+[Ch12](./docs/RL/Sutton/Chapter12.md)
