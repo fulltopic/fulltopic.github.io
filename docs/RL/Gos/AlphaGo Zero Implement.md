@@ -17,3 +17,7 @@
 * The player is the same network trained previously to get better and stable parameters.
 * The input of the network are sampled uniformly from _samples_ generated in section _Play_
 * The loss function: l = (z - v)<sup>2</sup> - π<sup>T</sup>logp + c||θ||
+## Reference
+* [Paper](https://discovery.ucl.ac.uk/id/eprint/10045895/1/agz_unformatted_nature.pdf)
+* [Alpha Zero General Demo](https://github.com/suragnair/alpha-zero-general.git)
+* [Another Repo](https://github.com/Narsil/alphagozero.git)
