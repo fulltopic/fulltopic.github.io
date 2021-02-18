@@ -21,3 +21,4 @@
 * [Paper](https://discovery.ucl.ac.uk/id/eprint/10045895/1/agz_unformatted_nature.pdf)
 * [Alpha Zero General Demo](https://github.com/suragnair/alpha-zero-general.git)
 * [Another Repo](https://github.com/Narsil/alphagozero.git)
+* [Simple Tutorial](https://web.stanford.edu/~surag/posts/alphazero.html)
