@@ -1,0 +1,53 @@
+==PROF== Connected to process 44292 (/home/zf/workspaces/workspace_cuda/book-cuda-c/ch3/ex03)
+==PROF== Profiling "reduceUnrollData8Loop" - 0: 0%....50%....100% - 8 passes
+Starting reduce...
+Cpu reduce = 2131059349: 0.061059 
+Gpu unroll8 -------> <<<4096, 512>>> 
+Gpu interleave 2131059349: 0.361197 
+==PROF== Disconnected from process 44292
+[44292] ex03@127.0.0.1
+  reduceUnrollData8Loop(int *, int *, unsigned int), 2022-Aug-17 00:00:54, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           6.49
+    SM Frequency                                                             cycle/nsecond                           1.00
+    Elapsed Cycles                                                                   cycle                        222,101
+    Memory [%]                                                                           %                          81.77
+    DRAM Throughput                                                                      %                          81.77
+    Duration                                                                       usecond                         221.15
+    L1/TEX Cache Throughput                                                              %                          27.19
+    L2 Cache Throughput                                                                  %                          38.28
+    SM Active Cycles                                                                 cycle                        214,278
+    Compute (SM) [%]                                                                     %                          26.27
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   The kernel is utilizing greater than 80.0% of the available compute or memory performance of the device. To   
+          further improve performance, work will likely need to be shifted from the most utilized to another unit.      
+          Start by analyzing DRAM in the Memory Workload Analysis section.                                              
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        512
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                       4,096
+    Registers Per Thread                                                   register/thread                             26
+    Shared Memory Configuration Size                                                 Kbyte                          32.77
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                              byte/block                              0
+    Threads                                                                         thread                      2,097,152
+    Waves Per SM                                                                                                    56.89
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                             16
+    Block Limit Warps                                                                block                              2
+    Theoretical Active Warps per SM                                                   warp                             32
+    Theoretical Occupancy                                                                %                            100
+    Achieved Occupancy                                                                   %                          92.28
+    Achieved Active Warps Per SM                                                      warp                          29.53
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    INF   This kernel's theoretical occupancy is not impacted by any block limit.                                       
+

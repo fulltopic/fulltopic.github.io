@@ -1,0 +1,58 @@
+==PROF== Connected to process 23621 (/home/zf/workspaces/workspace_cuda/book-cuda-c/ch3/ex05)
+==PROF== Profiling "reduceInterleave" - 0: 0%....50%....100% - 8 passes
+Starting reduce...
+Cpu reduce = 2131059328.000000: 0.055392 
+Gpu interleave -------> <<<32768, 512>>> 
+Gpu interleave 3: 2131057408.000000 
+==PROF== Disconnected from process 23621
+[23621] ex05@127.0.0.1
+  reduceInterleave(float *, float *, unsigned int), 2022-Aug-17 21:22:50, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           6.47
+    SM Frequency                                                             cycle/nsecond                           1.00
+    Elapsed Cycles                                                                   cycle                      1,114,679
+    Memory [%]                                                                           %                          21.69
+    DRAM Throughput                                                                      %                          21.69
+    Duration                                                                       msecond                           1.11
+    L1/TEX Cache Throughput                                                              %                          17.36
+    L2 Cache Throughput                                                                  %                          12.70
+    SM Active Cycles                                                                 cycle                   1,112,430.72
+    Compute (SM) [%]                                                                     %                          37.10
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel exhibits low compute throughput and memory bandwidth utilization relative to the peak performance 
+          of this device. Achieved compute throughput and/or memory bandwidth below 60.0% of peak typically indicate    
+          latency issues. Look at Scheduler Statistics and Warp State Statistics for potential reasons.                 
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        512
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                      32,768
+    Registers Per Thread                                                   register/thread                             16
+    Shared Memory Configuration Size                                                 Kbyte                          32.77
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                              byte/block                              0
+    Threads                                                                         thread                     16,777,216
+    Waves Per SM                                                                                                   455.11
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              8
+    Block Limit Shared Mem                                                           block                             16
+    Block Limit Warps                                                                block                              2
+    Theoretical Active Warps per SM                                                   warp                             32
+    Theoretical Occupancy                                                                %                            100
+    Achieved Occupancy                                                                   %                          88.70
+    Achieved Active Warps Per SM                                                      warp                          28.38
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy is not impacted by any block limit. The difference between calculated     
+          theoretical (100.0%) and measured achieved occupancy (88.7%) can be the result of warp scheduling overheads   
+          or workload imbalances during the kernel execution. Load imbalances can occur between warps within a block    
+          as well as across blocks of the same kernel. See the CUDA Best Practices Guide                                
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+

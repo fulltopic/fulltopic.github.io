@@ -1,0 +1,59 @@
+==PROF== Connected to process 23688 (/home/zf/workspaces/workspace_cuda/book-cuda-c/ch3/ex05)
+==PROF== Profiling "reduceUnrollData8Warp" - 0: 0%....50%....100% - 8 passes
+Starting reduce...
+Cpu reduce = 2131059328.000000: 0.055290 
+Gpu interleave unroll8 -------> <<<4096, 512>>> 
+Gpu interleave 3: 2131059328.000000 
+==PROF== Disconnected from process 23688
+[23688] ex05@127.0.0.1
+  reduceUnrollData8Warp(float *, float *, unsigned int), 2022-Aug-17 21:23:07, Context 1, Stream 7
+    Section: GPU Speed Of Light Throughput
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    DRAM Frequency                                                           cycle/nsecond                           6.46
+    SM Frequency                                                             cycle/usecond                         999.26
+    Elapsed Cycles                                                                   cycle                        248,462
+    Memory [%]                                                                           %                          73.15
+    DRAM Throughput                                                                      %                          73.15
+    Duration                                                                       usecond                         248.64
+    L1/TEX Cache Throughput                                                              %                          26.06
+    L2 Cache Throughput                                                                  %                          38.26
+    SM Active Cycles                                                                 cycle                     245,821.19
+    Compute (SM) [%]                                                                     %                          20.33
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   Memory is more heavily utilized than Compute: Look at the Memory Workload Analysis section to identify the    
+          DRAM bottleneck. Check memory replay (coalescing) metrics to make sure you're efficiently utilizing the       
+          bytes transferred. Also consider whether it is possible to do more work per memory access (kernel fusion) or  
+          whether there are values you can (re)compute.                                                                 
+
+    Section: Launch Statistics
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Size                                                                                                        512
+    Function Cache Configuration                                                                  cudaFuncCachePreferNone
+    Grid Size                                                                                                       4,096
+    Registers Per Thread                                                   register/thread                             26
+    Shared Memory Configuration Size                                                 Kbyte                          32.77
+    Driver Shared Memory Per Block                                              byte/block                              0
+    Dynamic Shared Memory Per Block                                             byte/block                              0
+    Static Shared Memory Per Block                                              byte/block                              0
+    Threads                                                                         thread                      2,097,152
+    Waves Per SM                                                                                                    56.89
+    ---------------------------------------------------------------------- --------------- ------------------------------
+
+    Section: Occupancy
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    Block Limit SM                                                                   block                             16
+    Block Limit Registers                                                            block                              4
+    Block Limit Shared Mem                                                           block                             16
+    Block Limit Warps                                                                block                              2
+    Theoretical Active Warps per SM                                                   warp                             32
+    Theoretical Occupancy                                                                %                            100
+    Achieved Occupancy                                                                   %                          47.48
+    Achieved Active Warps Per SM                                                      warp                          15.19
+    ---------------------------------------------------------------------- --------------- ------------------------------
+    WRN   This kernel's theoretical occupancy is not impacted by any block limit. The difference between calculated     
+          theoretical (100.0%) and measured achieved occupancy (47.5%) can be the result of warp scheduling overheads   
+          or workload imbalances during the kernel execution. Load imbalances can occur between warps within a block    
+          as well as across blocks of the same kernel. See the CUDA Best Practices Guide                                
+          (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on           
+          optimizing occupancy.                                                                                         
+
