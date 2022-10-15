@@ -14,6 +14,8 @@
 12. [coroutine theory](https://lewissbaker.github.io/2017/09/25/coroutine-theory)
 13. [awaiter](https://lewissbaker.github.io/2017/11/17/understanding-operator-co-await)
 14. [design purpose?](https://stackoverflow.com/questions/71153205/c-coroutine-when-how-to-use#)
+15. [demystifying](https://www.cnblogs.com/coolcpp/p/demystifying_cpp20_coroutines.html)
+16. [introduction](https://zhuanlan.zhihu.com/p/446993465)
 ## Concepts
 General `coroutine` concept is different from `coroutine syntax library`. 
 Then, why coroutine?
@@ -24,14 +26,14 @@ This ability to execute logic after the coroutine enters the ‘suspended’ sta
 ### C++ std Coroutine
 #### Theory
 ##### definition
-Roughly speaking, coroutines are functions that can invoke
+`Roughly speaking, coroutines are functions that can invoke
 each other but do not share a stack, so can flexibly suspend their execution at any point to enter a different coroutine.
 In the true spirit of C++, C++20 coroutines are implemented 
 as a nice little nugget buried underneath heaps of garbage that you have to 
-wade through to access this nice part [6].
+wade through to access this nice part [6].`
 
 ##### stackful vs. stackless
-The implementation of coroutines described 
+`The implementation of coroutines described 
 in the current draft of the TS is “stackless”, 
 which means that the entire stack is not saved 
 when the coroutine is suspended; instead, 
@@ -40,13 +42,22 @@ This is different to “stackful” coroutines
 in which the entire call stack is saved and restored. 
 The advantage of the “stackless” approach in the TS 
 is that coroutines can be very light-weight, 
-only needing storage for any local variables [5].
+only needing storage for any local variables [5].`
 #### Underneath
 What compiler has done, like, create all those pieces of functions and objects(on heap).
 #### Object lifetime in coroutine
 In a coroutine, you can’t rely on references passed as arguments remaining valid for the life of the coroutine. You need to think of them like captures in a lambda [5].
 #### Synchronization in coroutine
 [13]
+`
+比如协程 A 调用了协程 B，如果只有 B 完成之后才能调用 A 那么这个协程就是 Stackful，此时 A/B 是非对称协程；如果 A/B 被调用的概率相同那么这个协程就是 Stackless，此时 A/B 是对称协程[16]
+`
+
+So, c++20 coroutine has synchronization issues?
+
+`
+协程天生有栈属性，而且是 lock free[16]
+`
 #### Implement simple coroutine case by other framework(mutex, condition etc)
 e.g.:
 * assembly 
