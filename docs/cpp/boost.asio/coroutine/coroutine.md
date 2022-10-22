@@ -53,6 +53,10 @@ In a coroutine, you can’t rely on references passed as arguments remaining val
 比如协程 A 调用了协程 B，如果只有 B 完成之后才能调用 A 那么这个协程就是 Stackful，此时 A/B 是非对称协程；如果 A/B 被调用的概率相同那么这个协程就是 Stackless，此时 A/B 是对称协程[16]
 `
 
+`
+Note that because the coroutine is fully suspended before entering awaiter.await_suspend(), that function is free to transfer the coroutine handle across threads, with no additional synchronization. For example, it can put it inside a callback, scheduled to run on a threadpool when async I/O operation completes. In that case, since the current coroutine may have been resumed and thus executed the awaiter object's destructor, all concurrently as await_suspend() continues its execution on the current thread, await_suspend() should treat *this as destroyed and not access it after the handle was published to other threads.[1]
+`
+
 So, c++20 coroutine has synchronization issues?
 
 `
